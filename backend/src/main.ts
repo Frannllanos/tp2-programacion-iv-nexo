@@ -22,8 +22,9 @@ async function bootstrap() {
   }));
 
   const port = config.get<number>('PORT', 3000);
-  await app.listen(port);
-  console.log(`API NEXO disponible en http://localhost:${port}/api`);
+  await app.listen(port, '0.0.0.0');
+  
+  console.log(`API NEXO disponible en puerto ${port}`);
 }
 
 void bootstrap();
