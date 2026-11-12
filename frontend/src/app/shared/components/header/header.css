@@ -1,0 +1,17 @@
+.site-header { position: sticky; top: 0; z-index: 30; backdrop-filter: blur(18px); background: rgba(9,13,22,.82); border-bottom: 1px solid rgba(43,56,81,.8); }
+.nav { min-height: 72px; display: flex; align-items: center; gap: 26px; }
+.brand { text-decoration: none; font-weight: 950; letter-spacing: .08em; display: flex; align-items: center; gap: 9px; }
+.brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(145deg, #7c3aed, #22d3ee); color: white; box-shadow: 0 8px 30px rgba(124,58,237,.25); }
+.links { display: flex; gap: 8px; margin-right: auto; }
+.links a { color: var(--muted); text-decoration: none; padding: 9px 11px; border-radius: 10px; font-weight: 700; }
+.links a:hover, .links a.active { color: white; background: var(--surface-2); }
+.account { display: flex; align-items: center; gap: 10px; }
+.account-copy { display: grid; font-size: .82rem; }
+.account-copy span { color: var(--muted); text-transform: capitalize; }
+.logout { color: #fecdd3; background: transparent; border: 1px solid rgba(251,113,133,.25); border-radius: 10px; padding: 8px 10px; cursor: pointer; }
+@media (max-width: 760px) {
+  .nav { flex-wrap: wrap; padding-block: 10px; gap: 8px 14px; }
+  .links { order: 3; width: 100%; overflow-x: auto; }
+  .account { margin-left: auto; }
+  .account-copy { display: none; }
+}

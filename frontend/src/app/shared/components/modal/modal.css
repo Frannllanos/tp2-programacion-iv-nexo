@@ -1,0 +1,8 @@
+.overlay { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.68); backdrop-filter: blur(7px); }
+.dialog { width: min(430px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 26px; text-align: center; box-shadow: var(--shadow); }
+.icon { width: 50px; height: 50px; display: grid; place-items: center; margin: 0 auto 14px; border-radius: 16px; background: rgba(124,58,237,.16); color: #c4b5fd; font-size: 1.4rem; font-weight: 900; }
+.error-icon { background: rgba(251,113,133,.14); color: #fda4af; }
+.success-icon { background: rgba(52,211,153,.14); color: #6ee7b7; }
+h2 { margin: 0 0 8px; }
+p { color: var(--muted); line-height: 1.6; white-space: pre-line; }
+.actions { display: flex; gap: 10px; justify-content: center; margin-top: 22px; }

@@ -1,0 +1,32 @@
+<article class="post card">
+  <header class="post-header">
+    <img class="avatar" [src]="publicacion.autor.fotoPerfilUrl" [alt]="'Foto de ' + publicacion.autor.nombreUsuario">
+    <div>
+      <strong>{{ publicacion.autor.nombre }} {{ publicacion.autor.apellido }}</strong>
+      <p>@{{ publicacion.autor.nombreUsuario }} · {{ publicacion.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+    </div>
+    <span class="badge">{{ publicacion.likesCount }} me gusta</span>
+  </header>
+
+  <div class="post-copy">
+    <h2>{{ publicacion.titulo }}</h2>
+    <p>{{ publicacion.descripcion }}</p>
+  </div>
+
+  @if (publicacion.imagenUrl) {
+    <img class="post-image" [src]="publicacion.imagenUrl" [alt]="'Imagen de ' + publicacion.titulo">
+  }
+
+  @if (mostrarAcciones) {
+    <footer class="post-actions">
+      <button class="like" [class.liked]="dioLike" type="button" (click)="toggleLike.emit(publicacion)">
+        <span>{{ dioLike ? '♥' : '♡' }}</span>
+        {{ dioLike ? 'Quitar Me gusta' : 'Me gusta' }}
+      </button>
+
+      @if (puedeEliminar) {
+        <button class="delete" type="button" (click)="eliminar.emit(publicacion)">Eliminar publicación</button>
+      }
+    </footer>
+  }
+</article>

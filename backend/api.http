@@ -1,0 +1,43 @@
+@base = http://localhost:3000/api
+@usuarioId = REEMPLAZAR_ID
+@publicacionId = REEMPLAZAR_ID
+
+### Health
+GET {{base}}/health
+
+### Login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "identificador": "usuario_demo",
+  "contrasena": "Clave123"
+}
+
+### Listar publicaciones por fecha
+GET {{base}}/publicaciones?orden=fecha&offset=0&limit=6
+
+### Listar por likes
+GET {{base}}/publicaciones?orden=likes&offset=0&limit=6
+
+### Filtrar por usuario
+GET {{base}}/publicaciones?orden=fecha&offset=0&limit=3&usuarioId={{usuarioId}}
+
+### Dar Me gusta
+POST {{base}}/publicaciones/{{publicacionId}}/me-gusta
+Content-Type: application/json
+
+{
+  "usuarioId": "{{usuarioId}}"
+}
+
+### Quitar Me gusta
+DELETE {{base}}/publicaciones/{{publicacionId}}/me-gusta
+Content-Type: application/json
+
+{
+  "usuarioId": "{{usuarioId}}"
+}
+
+### Baja lógica
+DELETE {{base}}/publicaciones/{{publicacionId}}?usuarioId={{usuarioId}}

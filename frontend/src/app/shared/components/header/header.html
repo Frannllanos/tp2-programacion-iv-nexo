@@ -1,0 +1,29 @@
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" routerLink="/publicaciones" aria-label="NEXO inicio">
+      <span class="brand-mark">N</span>
+      <span>NEXO</span>
+    </a>
+
+    @if (session.usuario(); as usuario) {
+      <nav class="links" aria-label="Navegación principal">
+        <a routerLink="/publicaciones" routerLinkActive="active">Publicaciones</a>
+        <a routerLink="/mi-perfil" routerLinkActive="active">Mi perfil</a>
+      </nav>
+
+      <div class="account">
+        <img class="avatar" [src]="usuario.fotoPerfilUrl" [alt]="'Foto de ' + usuario.nombreUsuario">
+        <div class="account-copy">
+          <strong>@{{ usuario.nombreUsuario }}</strong>
+          <span>{{ usuario.perfil }}</span>
+        </div>
+        <button class="logout" type="button" (click)="cerrarSesion()">Salir</button>
+      </div>
+    } @else {
+      <nav class="links">
+        <a routerLink="/login" routerLinkActive="active">Ingresar</a>
+        <a routerLink="/registro" routerLinkActive="active">Crear cuenta</a>
+      </nav>
+    }
+  </div>
+</header>

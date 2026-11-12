@@ -1,0 +1,89 @@
+<section class="page">
+  <div class="container feed-layout">
+    <aside class="left-col">
+      @if (session.usuario(); as usuario) {
+        <section class="card profile-mini">
+          <img [src]="usuario.fotoPerfilUrl" [alt]="'Foto de ' + usuario.nombreUsuario">
+          <div>
+            <strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong>
+            <p>@{{ usuario.nombreUsuario }}</p>
+          </div>
+          <span class="badge">{{ usuario.perfil }}</span>
+        </section>
+      }
+
+      @if (session.usuario()) {
+        <section class="card create-card">
+          <div class="section-heading">
+            <span class="badge">Nueva</span>
+            <h2>Crear publicación</h2>
+          </div>
+          <form [formGroup]="formulario" (ngSubmit)="crear()">
+            <div class="field">
+              <label for="titulo">Título</label>
+              <input id="titulo" formControlName="titulo" maxlength="150" placeholder="¿Qué querés compartir?">
+              @if (formulario.controls.titulo.invalid && formulario.controls.titulo.touched) { <p class="error">Título obligatorio (2 a 150 caracteres).</p> }
+            </div>
+            <div class="field">
+              <label for="descripcion">Mensaje</label>
+              <textarea id="descripcion" formControlName="descripcion" maxlength="2000" placeholder="Escribí tu publicación"></textarea>
+              <p class="help">{{ formulario.controls.descripcion.value.length }}/2000</p>
+            </div>
+            <div class="field">
+              <label for="imagen">Imagen opcional</label>
+              <input id="imagen" type="file" accept="image/*" (change)="seleccionarImagen($event)">
+            </div>
+            @if (imagenPreview()) { <img class="preview" [src]="imagenPreview()" alt="Vista previa de la publicación"> }
+            <button class="btn btn-primary" type="submit" [disabled]="guardando()">{{ guardando() ? 'Publicando…' : 'Publicar' }}</button>
+          </form>
+        </section>
+      } @else {
+        <section class="card guest-card">
+          <span class="badge">Sprint 1</span>
+          <h2>Explorá el feed</h2>
+          <p>En estos sprints la navegación no tiene límites de accesibilidad. Iniciá sesión para crear publicaciones o reaccionar.</p>
+          <a class="btn btn-primary" routerLink="/login">Iniciar sesión</a>
+        </section>
+      }
+    </aside>
+
+    <main class="feed">
+      <header class="feed-header">
+        <div>
+          <span class="eyebrow">FEED</span>
+          <h1>Publicaciones</h1>
+          <p>{{ total() }} publicaciones activas</p>
+        </div>
+        <label class="sort">Ordenar
+          <select [value]="orden()" (change)="cambiarOrden($event)">
+            <option value="fecha">Más recientes</option>
+            <option value="likes">Más Me gusta</option>
+          </select>
+        </label>
+      </header>
+
+      @if (cargando()) {
+        <div class="card loading">Cargando publicaciones…</div>
+      } @else if (publicaciones().length === 0) {
+        <div class="card empty">Todavía no hay publicaciones para mostrar.</div>
+      } @else {
+        <div class="posts">
+          @for (publicacion of publicaciones(); track publicacion.id) {
+            <app-publicacion-card
+              [publicacion]="publicacion"
+              [usuarioActual]="session.usuario()"
+              [mostrarAcciones]="session.usuario() !== null"
+              (toggleLike)="toggleLike($event)"
+              (eliminar)="pedirEliminar($event)" />
+          }
+        </div>
+      }
+
+      <nav class="pagination" aria-label="Paginación">
+        <button class="btn btn-secondary" type="button" [disabled]="pagina() === 1" (click)="anterior()">← Anterior</button>
+        <span>Página {{ pagina() }}</span>
+        <button class="btn btn-secondary" type="button" [disabled]="!hasNext()" (click)="siguiente()">Siguiente →</button>
+      </nav>
+    </main>
+  </div>
+</section>

@@ -1,0 +1,13 @@
+.register-layout { display: grid; grid-template-columns: .78fr 1.22fr; gap: 34px; align-items: start; }
+aside { position: sticky; top: 106px; }
+aside h1 { font-size: clamp(2.1rem,5vw,4rem); line-height: 1; letter-spacing: -.05em; margin: 14px 0 18px; }
+aside > p { color: var(--muted); line-height: 1.65; }
+.eyebrow { color: var(--accent); font-weight: 900; letter-spacing: .13em; font-size: .78rem; }
+.preview { margin-top: 26px; padding: 18px; display: flex; gap: 14px; align-items: center; color: var(--muted); }
+.preview img, .placeholder { width: 66px; height: 66px; border-radius: 50%; object-fit: cover; }
+.placeholder { display: grid; place-items: center; background: linear-gradient(145deg,#7c3aed,#22d3ee); color: white; font-size: 1.7rem; font-weight: 950; }
+.register-form { padding: 28px; display: grid; gap: 17px; }
+.form-title h2 { margin: 10px 0 0; }
+.two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.switch { margin: 0; text-align: center; color: var(--muted); }.switch a { color: #c4b5fd; font-weight: 800; }
+@media(max-width: 850px) { .register-layout { grid-template-columns: 1fr; } aside { position: static; } .two-cols { grid-template-columns: 1fr; } }

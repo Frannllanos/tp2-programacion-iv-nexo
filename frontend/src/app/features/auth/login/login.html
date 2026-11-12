@@ -1,0 +1,35 @@
+<section class="auth-page">
+  <div class="auth-shell">
+    <div class="intro">
+      <span class="eyebrow">NEXO · RED SOCIAL</span>
+      <h1>Volvé a conectar con tu comunidad.</h1>
+      <p>Ingresá para crear publicaciones, reaccionar y mantener tu perfil al día.</p>
+    </div>
+
+    <form class="card form-card" [formGroup]="formulario" (ngSubmit)="ingresar()" novalidate>
+      <div>
+        <span class="badge">Sprint 1</span>
+        <h2>Iniciar sesión</h2>
+        <p class="subtitle">Usá tu correo o tu nombre de usuario.</p>
+      </div>
+
+      <div class="field">
+        <label for="identificador">Correo o nombre de usuario</label>
+        <input id="identificador" type="text" formControlName="identificador" autocomplete="username" placeholder="usuario o usuario@correo.com">
+        @if (campoInvalido('identificador')) { <p class="error">Ingresá al menos 3 caracteres.</p> }
+      </div>
+
+      <div class="field">
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Tu contraseña">
+        @if (campoInvalido('contrasena')) { <p class="error">Debe tener al menos 8 caracteres, una mayúscula y un número.</p> }
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="enviando()">
+        {{ enviando() ? 'Ingresando…' : 'Ingresar' }}
+      </button>
+
+      <p class="switch">¿No tenés cuenta? <a routerLink="/registro">Registrate</a></p>
+    </form>
+  </div>
+</section>

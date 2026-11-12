@@ -1,0 +1,21 @@
+{
+  "name": "red-social-tp2",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n FRONT,BACK -c auto \"npm run start -w frontend\" \"npm run start:dev -w backend\"",
+    "build": "npm run build -w frontend && npm run build -w backend",
+    "start:front": "npm run start -w frontend",
+    "start:back": "npm run start:dev -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || ^26.0.0"
+  }
+}

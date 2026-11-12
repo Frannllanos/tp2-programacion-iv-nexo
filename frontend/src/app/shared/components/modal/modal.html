@@ -1,0 +1,26 @@
+@if (modal.state(); as state) {
+  @if (state.visible) {
+    <div class="overlay" role="presentation" (click)="modal.cerrar()">
+      <section class="dialog" role="dialog" aria-modal="true" [attr.aria-label]="state.titulo" (click)="$event.stopPropagation()">
+        <div class="icon" [class.error-icon]="state.kind === 'error'" [class.success-icon]="state.kind === 'success'">
+          @switch (state.kind) {
+            @case ('success') { ✓ }
+            @case ('error') { ! }
+            @case ('confirm') { ? }
+            @default { i }
+          }
+        </div>
+        <h2>{{ state.titulo }}</h2>
+        <p>{{ state.mensaje }}</p>
+        <div class="actions">
+          @if (state.kind === 'confirm') {
+            <button class="btn btn-secondary" type="button" (click)="modal.cerrar()">{{ state.cancelarTexto }}</button>
+            <button class="btn btn-danger" type="button" (click)="modal.confirmar()">{{ state.confirmarTexto }}</button>
+          } @else {
+            <button class="btn btn-primary" type="button" (click)="modal.cerrar()">Aceptar</button>
+          }
+        </div>
+      </section>
+    </div>
+  }
+}

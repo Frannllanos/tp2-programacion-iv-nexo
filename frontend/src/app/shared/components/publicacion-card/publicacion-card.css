@@ -1,0 +1,16 @@
+.post { overflow: hidden; }
+.post-header { display: flex; align-items: center; gap: 11px; padding: 17px 18px 12px; }
+.post-header > div { min-width: 0; flex: 1; }
+.post-header strong { display: block; }
+.post-header p { color: var(--muted); margin: 3px 0 0; font-size: .82rem; }
+.post-copy { padding: 4px 18px 16px; }
+.post-copy h2 { margin: 4px 0 8px; font-size: 1.18rem; }
+.post-copy p { margin: 0; color: #cad5e4; line-height: 1.58; white-space: pre-wrap; overflow-wrap: anywhere; }
+.post-image { width: 100%; max-height: 620px; object-fit: cover; display: block; border-block: 1px solid var(--border); background: #080c14; }
+.post-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 13px 18px; }
+.post-actions button { border: 0; background: transparent; cursor: pointer; border-radius: 10px; padding: 8px 10px; font-weight: 800; }
+.like { color: #cbd5e1; }
+.like span { font-size: 1.2rem; color: #fb7185; }
+.like.liked { background: rgba(251,113,133,.09); color: #fecdd3; }
+.delete { color: #fda4af; }
+@media (max-width: 520px) { .badge { display: none; } .post-actions { align-items: stretch; flex-direction: column; } }
