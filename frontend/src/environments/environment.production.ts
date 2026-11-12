@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  // Reemplazar al desplegar el backend.
-  apiUrl: 'https://TU-BACKEND-PUBLICO.example.com/api',
+  apiUrl: 'https://nexo-api-p2c4.onrender.com/api'
 };
