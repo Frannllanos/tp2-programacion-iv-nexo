@@ -34,12 +34,12 @@ export class App {
       this.avisoSesion = setTimeout(() => {
         this.modal.confirm(
           'Tu sesión está por vencer',
-          'Quedan 5 minutos de sesión. ¿Querés extenderla por otros 15 minutos?',
+          'Quedan 3 minutos de sesión. ¿Querés extenderla por otros 5 minutos?',
           () => this.renovarSesion(),
           'Extender sesión',
           'Ahora no',
         );
-      }, 10 * 60 * 1000);
+      }, 2 * 60 * 1000);
     });
   }
 
@@ -47,7 +47,7 @@ export class App {
     this.auth.refrescar().subscribe({
       next: ({ token }) => {
         this.session.actualizarToken(token);
-        this.modal.success('Sesión renovada', 'Tu sesión fue extendida por 15 minutos.');
+        this.modal.success('Sesión renovada', 'Tu sesión fue extendida por 5 minutos.');
       },
       error: () => {
         // El interceptor global maneja el 401 y redirige al login.
