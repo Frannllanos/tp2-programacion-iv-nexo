@@ -44,10 +44,11 @@ export class PublicacionesService {
 
   async crear(
     dto: CrearPublicacionDto,
+    usuarioId: string,
     archivo?: Express.Multer.File,
   ) {
     await this.usuarios.obtenerDocumento(
-      dto.usuarioId,
+      usuarioId,
     );
 
     let subida:
@@ -75,7 +76,7 @@ export class PublicacionesService {
         await this.model.create({
           usuarioId:
             new Types.ObjectId(
-              dto.usuarioId,
+              usuarioId,
             ),
 
           titulo:
@@ -362,6 +363,10 @@ export class PublicacionesService {
     return this.obtenerMapeada(
       publicacionId,
     );
+  }
+
+  async obtenerUno(id: string) {
+    return this.obtenerMapeada(id);
   }
 
   private async obtenerMapeada(

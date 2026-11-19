@@ -44,8 +44,8 @@ export class Login {
     const { identificador, contrasena } = this.formulario.getRawValue();
     this.enviando.set(true);
     this.auth.login(identificador, contrasena).subscribe({
-      next: (usuario) => {
-        this.session.establecerUsuario(usuario);
+      next: (respuesta) => {
+        this.session.establecerSesion(respuesta.usuario, respuesta.token);
         this.enviando.set(false);
         void this.router.navigateByUrl('/publicaciones');
       },

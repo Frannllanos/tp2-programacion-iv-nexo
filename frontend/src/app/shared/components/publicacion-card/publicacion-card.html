@@ -17,6 +17,10 @@
     <img class="post-image" [src]="publicacion.imagenUrl" [alt]="'Imagen de ' + publicacion.titulo">
   }
 
+  <div class="detail-link-wrap">
+    <a class="detail-link" [routerLink]="['/publicaciones', publicacion.id]">Ver publicación y comentarios →</a>
+  </div>
+
   @if (mostrarAcciones) {
     <footer class="post-actions">
       <button class="like" [class.liked]="dioLike" type="button" (click)="toggleLike.emit(publicacion)">

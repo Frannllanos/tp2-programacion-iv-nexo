@@ -76,14 +76,14 @@ export class Publicaciones implements OnInit {
   }
 
   crear(): void {
-    const usuario = this.session.usuario();
-    if (!usuario || this.formulario.invalid) {
+    if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
       return;
     }
+
     const { titulo, descripcion } = this.formulario.getRawValue();
     this.guardando.set(true);
-    this.publicacionesService.crear(usuario.id, titulo, descripcion, this.imagen()).subscribe({
+    this.publicacionesService.crear(titulo, descripcion, this.imagen()).subscribe({
       next: () => {
         this.guardando.set(false);
         this.formulario.reset({ titulo: '', descripcion: '' });
@@ -104,9 +104,11 @@ export class Publicaciones implements OnInit {
   toggleLike(publicacion: Publicacion): void {
     const usuario = this.session.usuario();
     if (!usuario) return;
+
     const request = publicacion.likes.includes(usuario.id)
-      ? this.publicacionesService.quitarMeGusta(publicacion.id, usuario.id)
-      : this.publicacionesService.darMeGusta(publicacion.id, usuario.id);
+      ? this.publicacionesService.quitarMeGusta(publicacion.id)
+      : this.publicacionesService.darMeGusta(publicacion.id);
+
     request.subscribe({
       next: (actualizada) => this.reemplazar(actualizada),
       error: (error) => this.modal.error('No se pudo actualizar el Me gusta', obtenerMensajeError(error)),
@@ -114,11 +116,12 @@ export class Publicaciones implements OnInit {
   }
 
   pedirEliminar(publicacion: Publicacion): void {
-    const usuario = this.session.usuario();
-    if (!usuario) return;
     this.modal.confirm('Eliminar publicación', 'La publicación dejará de mostrarse, pero se conservará en la base mediante baja lógica.', () => {
-      this.publicacionesService.eliminar(publicacion.id, usuario.id).subscribe({
-        next: () => { this.modal.success('Publicación eliminada', 'La baja lógica se realizó correctamente.'); this.cargar(); },
+      this.publicacionesService.eliminar(publicacion.id).subscribe({
+        next: () => {
+          this.modal.success('Publicación eliminada', 'La baja lógica se realizó correctamente.');
+          this.cargar();
+        },
         error: (error) => this.modal.error('No se pudo eliminar', obtenerMensajeError(error)),
       });
     });

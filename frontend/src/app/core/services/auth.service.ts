@@ -16,12 +16,21 @@ export interface RegistroPayload {
   imagenPerfil: File;
 }
 
+export interface AuthResponse {
+  usuario: Usuario;
+  token: string;
+}
+
+export interface RefreshResponse {
+  token: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/auth`;
 
-  registrar(payload: RegistroPayload): Observable<Usuario> {
+  registrar(payload: RegistroPayload): Observable<AuthResponse> {
     const form = new FormData();
     form.append('nombre', payload.nombre);
     form.append('apellido', payload.apellido);
@@ -32,13 +41,21 @@ export class AuthService {
     form.append('fechaNacimiento', payload.fechaNacimiento);
     form.append('descripcion', payload.descripcion);
     form.append('imagenPerfil', payload.imagenPerfil);
-    return this.http.post<Usuario>(`${this.baseUrl}/registro`, form);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/registro`, form);
   }
 
-  login(identificador: string, contrasena: string): Observable<Usuario> {
-    return this.http.post<Usuario>(`${this.baseUrl}/login`, {
+  login(identificador: string, contrasena: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/login`, {
       identificador,
       contrasena,
     });
+  }
+
+  autorizar(): Observable<Usuario> {
+    return this.http.post<Usuario>(`${this.baseUrl}/autorizar`, {});
+  }
+
+  refrescar(): Observable<RefreshResponse> {
+    return this.http.post<RefreshResponse>(`${this.baseUrl}/refrescar`, {});
   }
 }

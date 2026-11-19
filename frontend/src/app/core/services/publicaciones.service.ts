@@ -26,27 +26,27 @@ export class PublicacionesService {
     return this.http.get<PublicacionesResponse>(this.baseUrl, { params });
   }
 
-  crear(usuarioId: string, titulo: string, descripcion: string, imagen?: File): Observable<Publicacion> {
+  obtener(publicacionId: string): Observable<Publicacion> {
+    return this.http.get<Publicacion>(`${this.baseUrl}/${publicacionId}`);
+  }
+
+  crear(titulo: string, descripcion: string, imagen?: File): Observable<Publicacion> {
     const form = new FormData();
-    form.append('usuarioId', usuarioId);
     form.append('titulo', titulo);
     form.append('descripcion', descripcion);
     if (imagen) form.append('imagen', imagen);
     return this.http.post<Publicacion>(this.baseUrl, form);
   }
 
-  darMeGusta(publicacionId: string, usuarioId: string): Observable<Publicacion> {
-    return this.http.post<Publicacion>(`${this.baseUrl}/${publicacionId}/me-gusta`, { usuarioId });
+  darMeGusta(publicacionId: string): Observable<Publicacion> {
+    return this.http.post<Publicacion>(`${this.baseUrl}/${publicacionId}/me-gusta`, {});
   }
 
-  quitarMeGusta(publicacionId: string, usuarioId: string): Observable<Publicacion> {
-    return this.http.delete<Publicacion>(`${this.baseUrl}/${publicacionId}/me-gusta`, {
-      body: { usuarioId },
-    });
+  quitarMeGusta(publicacionId: string): Observable<Publicacion> {
+    return this.http.delete<Publicacion>(`${this.baseUrl}/${publicacionId}/me-gusta`);
   }
 
-  eliminar(publicacionId: string, usuarioId: string): Observable<void> {
-    const params = new HttpParams().set('usuarioId', usuarioId);
-    return this.http.delete<void>(`${this.baseUrl}/${publicacionId}`, { params });
+  eliminar(publicacionId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${publicacionId}`);
   }
 }

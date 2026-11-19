@@ -82,8 +82,8 @@ export class Registro {
     const valores = this.formulario.getRawValue();
     this.enviando.set(true);
     this.auth.registrar({ ...valores, imagenPerfil: this.archivo()! }).subscribe({
-      next: (usuario) => {
-        this.session.establecerUsuario(usuario);
+      next: (respuesta) => {
+        this.session.establecerSesion(respuesta.usuario, respuesta.token);
         this.enviando.set(false);
         this.modal.success('Cuenta creada', 'Tu perfil fue creado correctamente.');
         void this.router.navigateByUrl('/publicaciones');

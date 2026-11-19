@@ -10,8 +10,8 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors({
     origin: config.get<string>('FRONTEND_URL', 'http://localhost:4200'),
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   app.useGlobalPipes(new ValidationPipe({
@@ -23,7 +23,7 @@ async function bootstrap() {
 
   const port = config.get<number>('PORT', 3000);
   await app.listen(port, '0.0.0.0');
-  
+
   console.log(`API NEXO disponible en puerto ${port}`);
 }
 

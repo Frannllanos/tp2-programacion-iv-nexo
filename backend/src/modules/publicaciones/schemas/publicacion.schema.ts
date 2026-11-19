@@ -38,8 +38,6 @@ export class Publicacion {
   @Prop({ default: true, index: true })
   activa!: boolean;
 
-  // Se modela para que Mi Perfil pueda renderizar comentarios existentes.
-  // Las rutas para crearlos/editarlos corresponden recién al Sprint 3.
   @Prop({ type: [ComentarioSchema], default: [] })
   comentarios!: ComentarioEmbebido[];
 

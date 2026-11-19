@@ -6,7 +6,7 @@ export interface AutorPublicacion {
   fotoPerfilUrl: string;
 }
 
-export interface ComentarioPreview {
+export interface Comentario {
   id: string;
   usuarioId: string;
   nombreUsuario: string;
@@ -14,6 +14,8 @@ export interface ComentarioPreview {
   fecha: string;
   modificado: boolean;
 }
+
+export type ComentarioPreview = Comentario;
 
 export interface Publicacion {
   id: string;
@@ -31,6 +33,14 @@ export interface Publicacion {
 
 export interface PublicacionesResponse {
   items: Publicacion[];
+  total: number;
+  offset: number;
+  limit: number;
+  hasNext: boolean;
+}
+
+export interface ComentariosResponse {
+  items: Comentario[];
   total: number;
   offset: number;
   limit: number;

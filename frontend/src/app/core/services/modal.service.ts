@@ -36,14 +36,20 @@ export class ModalService {
     this._state.set({ visible: true, kind: 'info', titulo, mensaje });
   }
 
-  confirm(titulo: string, mensaje: string, onConfirm: () => void): void {
+  confirm(
+    titulo: string,
+    mensaje: string,
+    onConfirm: () => void,
+    confirmarTexto = 'Confirmar',
+    cancelarTexto = 'Cancelar',
+  ): void {
     this._state.set({
       visible: true,
       kind: 'confirm',
       titulo,
       mensaje,
-      confirmarTexto: 'Confirmar',
-      cancelarTexto: 'Cancelar',
+      confirmarTexto,
+      cancelarTexto,
       onConfirm,
     });
   }

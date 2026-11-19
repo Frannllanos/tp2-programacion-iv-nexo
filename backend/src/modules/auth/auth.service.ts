@@ -1,10 +1,13 @@
 import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { CloudinaryService } from '../media/cloudinary.service';
 import { ImageService } from '../media/image.service';
-import { UsuariosService } from '../usuarios/usuarios.service';
+import { UsuarioDocument } from '../usuarios/schemas/usuario.schema';
+import { UsuarioPublico, UsuariosService } from '../usuarios/usuarios.service';
 import { LoginDto } from './dto/login.dto';
 import { RegistroDto } from './dto/registro.dto';
+import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +15,7 @@ export class AuthService {
     private readonly usuarios: UsuariosService,
     private readonly cloudinary: CloudinaryService,
     private readonly images: ImageService,
+    private readonly jwt: JwtService,
   ) {}
 
   async registrar(dto: RegistroDto, archivo: Express.Multer.File) {
@@ -29,9 +33,10 @@ export class AuthService {
     const bufferNormalizado = await this.images.normalizarPerfil(archivo.buffer);
     const subida = await this.cloudinary.uploadBuffer(bufferNormalizado, 'tp2-red-social/perfiles');
 
+    let usuario: UsuarioDocument;
     try {
       const contrasenaHash = await bcrypt.hash(dto.contrasena, 12);
-      const usuario = await this.usuarios.crear({
+      usuario = await this.usuarios.crear({
         nombre: dto.nombre.trim(),
         apellido: dto.apellido.trim(),
         correo: dto.correo.trim().toLowerCase(),
@@ -43,12 +48,15 @@ export class AuthService {
         fotoPerfilPublicId: subida.public_id,
         perfil: 'usuario',
       });
-      return this.usuarios.aPublico(usuario);
     } catch (error: any) {
       await this.cloudinary.destroy(subida.public_id);
       if (error?.code === 11000) throw new ConflictException('El correo o nombre de usuario ya existe.');
       throw error;
     }
+
+    const usuarioPublico = this.usuarios.aPublico(usuario);
+    const token = await this.generarToken(usuarioPublico);
+    return { usuario: usuarioPublico, token };
   }
 
   async login(dto: LoginDto) {
@@ -58,6 +66,34 @@ export class AuthService {
     const coincide = await bcrypt.compare(dto.contrasena, usuario.contrasenaHash);
     if (!coincide) throw new UnauthorizedException('Correo/usuario o contraseña incorrectos.');
 
-    return this.usuarios.aPublico(usuario);
+    const usuarioPublico = this.usuarios.aPublico(usuario);
+    const token = await this.generarToken(usuarioPublico);
+    return { usuario: usuarioPublico, token };
+  }
+
+  async autorizar(usuarioId: string): Promise<UsuarioPublico> {
+    return this.usuarios.obtenerPublico(usuarioId);
+  }
+
+  async refrescar(payload: JwtPayload): Promise<{ token: string }> {
+    const nuevoPayload: JwtPayload = {
+      sub: payload.sub,
+      correo: payload.correo,
+      nombreUsuario: payload.nombreUsuario,
+      perfil: payload.perfil,
+    };
+
+    return { token: await this.jwt.signAsync(nuevoPayload) };
+  }
+
+  private generarToken(usuario: UsuarioPublico): Promise<string> {
+    const payload: JwtPayload = {
+      sub: usuario.id,
+      correo: usuario.correo,
+      nombreUsuario: usuario.nombreUsuario,
+      perfil: usuario.perfil,
+    };
+
+    return this.jwt.signAsync(payload);
   }
 }
