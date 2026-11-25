@@ -27,6 +27,17 @@ export class UsuariosService {
     return Boolean(existe);
   }
 
+  async existeCorreoONombreUsuarioExcepto(correo: string, nombreUsuario: string, usuarioId: string): Promise<boolean> {
+    const existe = await this.model.exists({
+      _id: { $ne: new Types.ObjectId(usuarioId) },
+      $or: [
+        { correo: correo.toLowerCase() },
+        { nombreUsuario: nombreUsuario.toLowerCase() },
+      ],
+    });
+    return Boolean(existe);
+  }
+
   async crear(data: Partial<Usuario>): Promise<UsuarioDocument> {
     return this.model.create(data);
   }
@@ -45,6 +56,16 @@ export class UsuariosService {
   async obtenerPublico(id: string): Promise<UsuarioPublico> {
     const usuario = await this.obtenerDocumento(id);
     return this.aPublico(usuario);
+  }
+
+  async actualizarPerfil(id: string, data: Partial<Usuario>): Promise<UsuarioDocument> {
+    const usuario = await this.model.findByIdAndUpdate(
+      id,
+      { $set: data },
+      { returnDocument: 'after', runValidators: true },
+    ).exec();
+    if (!usuario) throw new NotFoundException('Usuario no encontrado.');
+    return usuario;
   }
 
   async listarTodos(): Promise<UsuarioPublico[]> {

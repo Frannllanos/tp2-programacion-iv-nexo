@@ -8,6 +8,7 @@ import { UsuarioPublico, UsuariosService } from '../usuarios/usuarios.service';
 import { LoginDto } from './dto/login.dto';
 import { RegistroDto } from './dto/registro.dto';
 import { AdminCrearUsuarioDto } from './dto/admin-crear-usuario.dto';
+import { EditarPerfilDto } from './dto/editar-perfil.dto';
 import { JwtPayload } from './jwt-payload.interface';
 
 @Injectable()
@@ -111,6 +112,48 @@ export class AuthService {
       if (error?.code === 11000) throw new ConflictException('El correo o nombre de usuario ya existe.');
       throw error;
     }
+  }
+
+  async editarPerfil(usuarioId: string, dto: EditarPerfilDto, archivo?: Express.Multer.File): Promise<UsuarioPublico> {
+    const usuario = await this.usuarios.obtenerDocumento(usuarioId);
+    const nacimiento = new Date(dto.fechaNacimiento);
+    if (nacimiento > new Date()) throw new BadRequestException('La fecha de nacimiento no puede ser futura.');
+
+    const correo = dto.correo.trim().toLowerCase();
+    const nombreUsuario = dto.nombreUsuario.trim().toLowerCase();
+    const existe = await this.usuarios.existeCorreoONombreUsuarioExcepto(correo, nombreUsuario, usuarioId);
+    if (existe) throw new ConflictException('El correo o nombre de usuario ya esta registrado.');
+
+    let nuevaFoto: { secure_url: string; public_id: string } | null = null;
+    if (archivo) {
+      const bufferNormalizado = await this.images.normalizarPerfil(archivo.buffer);
+      const subida = await this.cloudinary.uploadBuffer(bufferNormalizado, 'tp2-red-social/perfiles');
+      nuevaFoto = { secure_url: subida.secure_url, public_id: subida.public_id };
+    }
+
+    const fotoAnteriorPublicId = usuario.fotoPerfilPublicId;
+    let actualizado: UsuarioDocument;
+    try {
+      actualizado = await this.usuarios.actualizarPerfil(usuarioId, {
+        nombre: dto.nombre.trim(),
+        apellido: dto.apellido.trim(),
+        correo,
+        nombreUsuario,
+        fechaNacimiento: nacimiento,
+        descripcion: dto.descripcion.trim(),
+        ...(nuevaFoto ? { fotoPerfilUrl: nuevaFoto.secure_url, fotoPerfilPublicId: nuevaFoto.public_id } : {}),
+      });
+    } catch (error: any) {
+      if (nuevaFoto) await this.cloudinary.destroy(nuevaFoto.public_id);
+      if (error?.code === 11000) throw new ConflictException('El correo o nombre de usuario ya existe.');
+      throw error;
+    }
+
+    if (nuevaFoto && fotoAnteriorPublicId !== nuevaFoto.public_id) {
+      await this.cloudinary.destroy(fotoAnteriorPublicId);
+    }
+
+    return this.usuarios.aPublico(actualizado);
   }
 
   async autorizar(usuarioId: string): Promise<UsuarioPublico> {

@@ -7,11 +7,14 @@
         <div class="cover"></div>
         <div class="identity">
           <img [src]="user.fotoPerfilUrl" [alt]="'Foto de ' + user.nombreUsuario">
-          <div>
+          <div class="identity-copy">
             <span class="badge" [appAdminAccent]="user.perfil">{{ user.perfil | perfilEtiqueta }}</span>
             <h1>{{ user | nombreCompleto }}</h1>
             <p>@{{ user.nombreUsuario }}</p>
           </div>
+          <button class="btn btn-secondary edit-button" type="button" (click)="comenzarEdicion()" [disabled]="editando()">
+            Editar perfil
+          </button>
         </div>
         <p class="bio">{{ user.descripcion }}</p>
         <dl class="facts">
@@ -21,6 +24,73 @@
           <div><dt>Perfil</dt><dd>{{ user.perfil | perfilEtiqueta }}</dd></div>
         </dl>
       </section>
+
+      @if (editando()) {
+        <section class="card edit-card">
+          <div class="edit-heading">
+            <div>
+              <span class="eyebrow">MI PERFIL</span>
+              <h2>Editar datos</h2>
+            </div>
+            <p>La contrasena y el tipo de perfil no se modifican desde aqui.</p>
+          </div>
+
+          <form [formGroup]="formulario" (ngSubmit)="guardarPerfil()" class="edit-form">
+            <div class="edit-grid">
+              <div class="field">
+                <label for="edit-nombre">Nombre</label>
+                <input id="edit-nombre" formControlName="nombre">
+                @if (invalido('nombre')) { <small class="error">Ingresa un nombre de 2 a 60 caracteres.</small> }
+              </div>
+              <div class="field">
+                <label for="edit-apellido">Apellido</label>
+                <input id="edit-apellido" formControlName="apellido">
+                @if (invalido('apellido')) { <small class="error">Ingresa un apellido de 2 a 60 caracteres.</small> }
+              </div>
+              <div class="field">
+                <label for="edit-correo">Correo</label>
+                <input id="edit-correo" type="email" formControlName="correo">
+                @if (invalido('correo')) { <small class="error">Ingresa un correo valido.</small> }
+              </div>
+              <div class="field">
+                <label for="edit-usuario">Nombre de usuario</label>
+                <input id="edit-usuario" formControlName="nombreUsuario">
+                @if (invalido('nombreUsuario')) { <small class="error">Usa 3 a 30 caracteres sin espacios.</small> }
+              </div>
+              <div class="field">
+                <label for="edit-fecha">Fecha de nacimiento</label>
+                <input id="edit-fecha" type="date" formControlName="fechaNacimiento">
+                @if (invalido('fechaNacimiento')) { <small class="error">Ingresa una fecha valida que no sea futura.</small> }
+              </div>
+              <div class="field">
+                <label for="edit-foto">Nueva foto de perfil (opcional)</label>
+                <input id="edit-foto" type="file" accept="image/*" (change)="seleccionarImagen($event)">
+                <small class="help">Si no seleccionas una imagen, se conserva la actual.</small>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="edit-descripcion">Descripcion</label>
+              <textarea id="edit-descripcion" maxlength="280" formControlName="descripcion"></textarea>
+              @if (invalido('descripcion')) { <small class="error">Ingresa una descripcion de 3 a 280 caracteres.</small> }
+            </div>
+
+            @if (preview()) {
+              <div class="preview-row">
+                <img [src]="preview()" alt="Vista previa de la nueva foto">
+                <span>Vista previa de la nueva foto</span>
+              </div>
+            }
+
+            <div class="edit-actions">
+              <button class="btn btn-ghost" type="button" (click)="cancelarEdicion()" [disabled]="guardando()">Cancelar</button>
+              <button class="btn btn-primary" type="submit" [disabled]="guardando()">
+                {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+              </button>
+            </div>
+          </form>
+        </section>
+      }
 
       <section class="recent">
         <div class="recent-heading">

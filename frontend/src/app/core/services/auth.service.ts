@@ -16,6 +16,17 @@ export interface RegistroPayload {
   imagenPerfil: File;
 }
 
+
+export interface EditarPerfilPayload {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  nombreUsuario: string;
+  fechaNacimiento: string;
+  descripcion: string;
+  imagenPerfil?: File | null;
+}
+
 export interface AuthResponse {
   usuario: Usuario;
   token: string;
@@ -49,6 +60,18 @@ export class AuthService {
       identificador,
       contrasena,
     });
+  }
+
+  actualizarPerfil(payload: EditarPerfilPayload): Observable<Usuario> {
+    const form = new FormData();
+    form.append('nombre', payload.nombre);
+    form.append('apellido', payload.apellido);
+    form.append('correo', payload.correo);
+    form.append('nombreUsuario', payload.nombreUsuario);
+    form.append('fechaNacimiento', payload.fechaNacimiento);
+    form.append('descripcion', payload.descripcion);
+    if (payload.imagenPerfil) form.append('imagenPerfil', payload.imagenPerfil);
+    return this.http.patch<Usuario>(`${this.baseUrl}/perfil`, form);
   }
 
   autorizar(): Observable<Usuario> {

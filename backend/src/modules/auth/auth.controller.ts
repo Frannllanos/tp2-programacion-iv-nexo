@@ -4,6 +4,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -13,6 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { EditarPerfilDto } from './dto/editar-perfil.dto';
 import { RegistroDto } from './dto/registro.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayload } from './jwt-payload.interface';
@@ -36,6 +38,20 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   login(@Body() dto: LoginDto) {
     return this.auth.login(dto);
+  }
+
+  @Patch('perfil')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('imagenPerfil', {
+    storage: memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024, files: 1 },
+  }))
+  editarPerfil(
+    @UsuarioActual() usuario: JwtPayload,
+    @Body() dto: EditarPerfilDto,
+    @UploadedFile() archivo?: Express.Multer.File,
+  ) {
+    return this.auth.editarPerfil(usuario.sub, dto, archivo);
   }
 
   @Post('autorizar')
