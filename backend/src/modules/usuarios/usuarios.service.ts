@@ -13,6 +13,7 @@ export interface UsuarioPublico {
   descripcion: string;
   fotoPerfilUrl: string;
   perfil: 'usuario' | 'administrador';
+  activo: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -46,6 +47,17 @@ export class UsuariosService {
     return this.aPublico(usuario);
   }
 
+  async listarTodos(): Promise<UsuarioPublico[]> {
+    const usuarios = await this.model.find().sort({ createdAt: -1 }).exec();
+    return usuarios.map((usuario) => this.aPublico(usuario));
+  }
+
+  async cambiarEstado(id: string, activo: boolean): Promise<UsuarioPublico> {
+    const usuario = await this.model.findByIdAndUpdate(id, { activo }, { new: true }).exec();
+    if (!usuario) throw new NotFoundException('Usuario no encontrado.');
+    return this.aPublico(usuario);
+  }
+
   aPublico(usuario: UsuarioDocument): UsuarioPublico {
     return {
       id: String(usuario._id),
@@ -57,6 +69,7 @@ export class UsuariosService {
       descripcion: usuario.descripcion,
       fotoPerfilUrl: usuario.fotoPerfilUrl,
       perfil: usuario.perfil,
+      activo: usuario.activo !== false,
       createdAt: usuario.createdAt,
       updatedAt: usuario.updatedAt,
     };

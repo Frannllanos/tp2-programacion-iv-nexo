@@ -3,11 +3,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Publicacion } from '../../../core/models/publicacion.model';
 import { Usuario } from '../../../core/models/usuario.model';
+import { NavegableDirective } from '../../directives/navegable.directive';
+import { NombreCompletoPipe } from '../../pipes/nombre-completo.pipe';
 
 @Component({
   selector: 'app-publicacion-card',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, NavegableDirective, NombreCompletoPipe],
   templateUrl: './publicacion-card.html',
   styleUrl: './publicacion-card.css',
 })
@@ -24,6 +26,9 @@ export class PublicacionCardComponent {
   }
 
   get puedeEliminar(): boolean {
-    return this.usuarioActual ? this.publicacion.autor.id === this.usuarioActual.id : false;
+    return Boolean(
+      this.usuarioActual &&
+      (this.publicacion.autor.id === this.usuarioActual.id || this.usuarioActual.perfil === 'administrador')
+    );
   }
 }

@@ -58,3 +58,8 @@ img { max-width: 100%; }
   .container { width: min(100% - 20px, 1120px); }
   .page { padding-top: 20px; }
 }
+
+.navegable { cursor: pointer; transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+.navegable:hover { border-color: rgba(139, 92, 246, .7); transform: translateY(-1px); }
+.navegable:focus-visible { outline: 3px solid rgba(34, 211, 238, .45); outline-offset: 3px; }
+.admin-accent { border-color: rgba(251, 191, 36, .55) !important; color: #fde68a !important; background: rgba(251, 191, 36, .08) !important; }

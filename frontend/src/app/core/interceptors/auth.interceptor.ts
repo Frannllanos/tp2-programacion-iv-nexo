@@ -16,8 +16,13 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   return next(requestConToken).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        session.cerrarSesion();
-        void router.navigateByUrl('/login');
+        // La pantalla /cargando maneja por si misma el 401 de /autorizar
+        // para evitar una doble redireccion durante el arranque de la app.
+        const esAutorizacionInicial = request.url.includes('/auth/autorizar');
+        if (!esAutorizacionInicial) {
+          session.cerrarSesion();
+          void router.navigateByUrl('/login');
+        }
       }
       return throwError(() => error);
     }),

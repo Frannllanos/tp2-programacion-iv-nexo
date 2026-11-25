@@ -28,26 +28,36 @@ export class App {
         clearTimeout(this.avisoSesion);
         this.avisoSesion = null;
       }
-
       if (!token || !validada) return;
 
+      const demora = this.calcularDemoraAviso(token);
       this.avisoSesion = setTimeout(() => {
         this.modal.confirm(
-          'Tu sesión está por vencer',
-          'Quedan 3 minutos de sesión. ¿Querés extenderla por otros 5 minutos?',
+          'Tu sesion esta por vencer',
+          'Queda 1 minuto de sesion. Queres extenderla por otros 3 minutos?',
           () => this.renovarSesion(),
-          'Extender sesión',
+          'Extender sesion',
           'Ahora no',
         );
-      }, 2 * 60 * 1000);
+      }, demora);
     });
+  }
+
+  private calcularDemoraAviso(token: string): number {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))) as { exp?: number };
+      if (!payload.exp) return 2 * 60 * 1000;
+      return Math.max(0, payload.exp * 1000 - Date.now() - 60 * 1000);
+    } catch {
+      return 2 * 60 * 1000;
+    }
   }
 
   private renovarSesion(): void {
     this.auth.refrescar().subscribe({
       next: ({ token }) => {
         this.session.actualizarToken(token);
-        this.modal.success('Sesión renovada', 'Tu sesión fue extendida por 5 minutos.');
+        this.modal.success('Sesion renovada', 'Tu sesion fue extendida por 3 minutos.');
       },
       error: () => {
         // El interceptor global maneja el 401 y redirige al login.

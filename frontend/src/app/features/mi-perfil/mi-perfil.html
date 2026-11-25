@@ -1,15 +1,15 @@
 <section class="page">
   <div class="container profile-page">
     @if (cargando()) {
-      <div class="card empty">Cargando perfil…</div>
+      <div class="card empty">Cargando perfil...</div>
     } @else if (usuario(); as user) {
       <section class="card hero">
         <div class="cover"></div>
         <div class="identity">
           <img [src]="user.fotoPerfilUrl" [alt]="'Foto de ' + user.nombreUsuario">
           <div>
-            <span class="badge">{{ user.perfil }}</span>
-            <h1>{{ user.nombre }} {{ user.apellido }}</h1>
+            <span class="badge" [appAdminAccent]="user.perfil">{{ user.perfil | perfilEtiqueta }}</span>
+            <h1>{{ user | nombreCompleto }}</h1>
             <p>@{{ user.nombreUsuario }}</p>
           </div>
         </div>
@@ -18,39 +18,30 @@
           <div><dt>Correo</dt><dd>{{ user.correo }}</dd></div>
           <div><dt>Nacimiento</dt><dd>{{ user.fechaNacimiento | date:'dd/MM/yyyy' }}</dd></div>
           <div><dt>Miembro desde</dt><dd>{{ user.createdAt | date:'dd/MM/yyyy' }}</dd></div>
-          <div><dt>Perfil</dt><dd>{{ user.perfil }}</dd></div>
+          <div><dt>Perfil</dt><dd>{{ user.perfil | perfilEtiqueta }}</dd></div>
         </dl>
       </section>
 
       <section class="recent">
         <div class="recent-heading">
-          <div><span class="eyebrow">ACTIVIDAD</span><h2>Mis últimas 3 publicaciones</h2></div>
-          <p>Actividad reciente</p>
+          <div><span class="eyebrow">ACTIVIDAD</span><h2>Mis ultimas 3 publicaciones</h2></div>
+          <p>Hace click en cualquier publicacion para verla completa.</p>
         </div>
 
         @if (publicaciones().length === 0) {
-          <div class="card empty">Todavía no realizaste publicaciones.</div>
+          <div class="card empty">Todavia no realizaste publicaciones.</div>
         } @else {
           @for (post of publicaciones(); track post.id) {
-            <article class="card profile-post">
+            <article class="card profile-post" [appNavegable]="['/publicaciones', post.id]">
               <div class="post-top">
                 <div>
                   <h3>{{ post.titulo }}</h3>
                   <span>{{ post.createdAt | date:'dd/MM/yyyy HH:mm' }} · {{ post.likesCount }} Me gusta</span>
                 </div>
+                <span class="open-hint">Abrir →</span>
               </div>
-              <p>{{ post.descripcion }}</p>
+              <p>{{ post.descripcion | textoCorto:280 }}</p>
               @if (post.imagenUrl) { <img [src]="post.imagenUrl" [alt]="post.titulo"> }
-              <div class="comments">
-                <strong>Comentarios</strong>
-                @if (post.comentarios.length === 0) {
-                  <p class="no-comments">Sin comentarios todavía.</p>
-                } @else {
-                  @for (comentario of post.comentarios; track comentario.id) {
-                    <div class="comment"><b>@{{ comentario.nombreUsuario }}</b> {{ comentario.mensaje }}</div>
-                  }
-                }
-              </div>
             </article>
           }
         }
@@ -58,8 +49,8 @@
     } @else {
       <section class="card empty">
         <h2>Mi Perfil</h2>
-        <p>Necesitás iniciar sesión para ver los datos de tu perfil.</p>
-        <a class="btn btn-primary" routerLink="/login">Iniciar sesión</a>
+        <p>Necesitas iniciar sesion para ver los datos de tu perfil.</p>
+        <a class="btn btn-primary" routerLink="/login">Iniciar sesion</a>
       </section>
     }
   </div>

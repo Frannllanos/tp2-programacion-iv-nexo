@@ -1,8 +1,8 @@
-<article class="post card">
+<article class="post card" [appNavegable]="['/publicaciones', publicacion.id]">
   <header class="post-header">
     <img class="avatar" [src]="publicacion.autor.fotoPerfilUrl" [alt]="'Foto de ' + publicacion.autor.nombreUsuario">
     <div>
-      <strong>{{ publicacion.autor.nombre }} {{ publicacion.autor.apellido }}</strong>
+      <strong>{{ publicacion.autor | nombreCompleto }}</strong>
       <p>@{{ publicacion.autor.nombreUsuario }} · {{ publicacion.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
     </div>
     <span class="badge">{{ publicacion.likesCount }} me gusta</span>
@@ -18,7 +18,7 @@
   }
 
   <div class="detail-link-wrap">
-    <a class="detail-link" [routerLink]="['/publicaciones', publicacion.id]">Ver publicación y comentarios →</a>
+    <a class="detail-link" [routerLink]="['/publicaciones', publicacion.id]">Ver publicacion y comentarios →</a>
   </div>
 
   @if (mostrarAcciones) {
@@ -29,7 +29,9 @@
       </button>
 
       @if (puedeEliminar) {
-        <button class="delete" type="button" (click)="eliminar.emit(publicacion)">Eliminar publicación</button>
+        <button class="delete" type="button" (click)="eliminar.emit(publicacion)">
+          {{ usuarioActual?.perfil === 'administrador' && publicacion.autor.id !== usuarioActual.id ? 'Dar de baja' : 'Eliminar publicacion' }}
+        </button>
       }
     </footer>
   }

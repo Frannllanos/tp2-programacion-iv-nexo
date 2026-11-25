@@ -99,3 +99,20 @@ Baja lógica. Solo autor o administrador.
 ```
 
 > En Sprint 3, `usuarioId` como identidad del actor se reemplaza por la identidad obtenida del JWT.
+
+## Sprint 4 - Administracion de usuarios
+
+Todas estas rutas requieren `Authorization: Bearer <JWT>` y perfil `administrador`.
+
+- `GET /api/usuarios`: lista usuarios.
+- `POST /api/usuarios`: crea un usuario o administrador. Recibe `multipart/form-data` con los mismos campos del registro, `perfil` e `imagenPerfil`.
+- `DELETE /api/usuarios/:id`: baja logica del usuario.
+- `POST /api/usuarios/:id/habilitar`: alta logica de un usuario deshabilitado.
+
+## Sprint 4 - Estadisticas
+
+Todas estas rutas requieren JWT de administrador y parametros `desde=YYYY-MM-DD&hasta=YYYY-MM-DD`.
+
+- `GET /api/publicaciones/estadisticas/publicaciones-por-usuario`
+- `GET /api/publicaciones/estadisticas/comentarios-por-dia`
+- `GET /api/publicaciones/estadisticas/comentarios-por-publicacion`

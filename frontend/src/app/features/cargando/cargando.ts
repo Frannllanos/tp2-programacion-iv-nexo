@@ -17,9 +17,12 @@ export class Cargando implements OnInit {
 
   ngOnInit(): void {
     const token = this.session.token();
+    const returnUrl = this.normalizarReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
+
     if (!token) {
       this.session.cerrarSesion();
-      void this.router.navigateByUrl('/login');
+      this.session.marcarArranqueVerificado();
+      void this.router.navigateByUrl(this.destinoSinSesion(returnUrl));
       return;
     }
 
@@ -27,13 +30,31 @@ export class Cargando implements OnInit {
       next: (usuario) => {
         this.session.establecerUsuario(usuario);
         this.session.marcarValidada();
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-        void this.router.navigateByUrl(returnUrl || '/publicaciones');
+        void this.router.navigateByUrl(this.destinoConSesion(returnUrl));
       },
       error: () => {
         this.session.cerrarSesion();
-        void this.router.navigateByUrl('/login');
+        this.session.marcarArranqueVerificado();
+        void this.router.navigateByUrl(this.destinoSinSesion(returnUrl));
       },
     });
+  }
+
+  private destinoSinSesion(returnUrl: string | null): string {
+    return returnUrl === '/registro' ? '/registro' : '/login';
+  }
+
+  private destinoConSesion(returnUrl: string | null): string {
+    if (!returnUrl || returnUrl === '/login' || returnUrl === '/registro') {
+      return '/publicaciones';
+    }
+    return returnUrl;
+  }
+
+  private normalizarReturnUrl(returnUrl: string | null): string | null {
+    if (!returnUrl || returnUrl === '/cargando' || returnUrl.startsWith('/cargando?')) {
+      return null;
+    }
+    return returnUrl.startsWith('/') ? returnUrl : null;
   }
 }

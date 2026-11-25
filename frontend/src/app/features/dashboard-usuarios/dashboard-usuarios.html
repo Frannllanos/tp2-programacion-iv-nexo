@@ -1,0 +1,61 @@
+<section class="page">
+  <div class="container dashboard-grid">
+    <section class="card panel">
+      <span class="eyebrow">ADMINISTRACION</span>
+      <h1>Usuarios</h1>
+      <p class="muted">Alta de usuarios y administradores, habilitacion y baja logica.</p>
+
+      @if (cargando()) {
+        <div class="empty">Cargando usuarios...</div>
+      } @else {
+        <div class="user-list">
+          @for (usuario of usuarios(); track usuario.id) {
+            <article class="user-row" [class.disabled-user]="!usuario.activo">
+              <img [src]="usuario.fotoPerfilUrl" [alt]="'Foto de ' + usuario.nombreUsuario">
+              <div class="user-copy">
+                <strong>{{ usuario | nombreCompleto }}</strong>
+                <span>@{{ usuario.nombreUsuario }} · {{ usuario.correo }}</span>
+              </div>
+              <span class="badge" [appAdminAccent]="usuario.perfil">{{ usuario.perfil | perfilEtiqueta }}</span>
+              <span class="status" [class.off]="!usuario.activo">{{ usuario.activo ? 'Habilitado' : 'Deshabilitado' }}</span>
+              <button class="btn" [class.btn-danger]="usuario.activo" [class.btn-secondary]="!usuario.activo" type="button" (click)="cambiarEstado(usuario)">
+                {{ usuario.activo ? 'Deshabilitar' : 'Habilitar' }}
+              </button>
+            </article>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="card panel create-panel">
+      <span class="eyebrow">NUEVO USUARIO</span>
+      <h2>Crear cuenta</h2>
+      <form [formGroup]="formulario" (ngSubmit)="crearUsuario()">
+        <div class="two-cols">
+          <div class="field"><label>Nombre</label><input appAutoFocus formControlName="nombre">@if (invalido('nombre')) { <small class="error">Ingresa un nombre de 2 a 60 caracteres.</small> }</div>
+          <div class="field"><label>Apellido</label><input formControlName="apellido">@if (invalido('apellido')) { <small class="error">Ingresa un apellido de 2 a 60 caracteres.</small> }</div>
+        </div>
+        <div class="two-cols">
+          <div class="field"><label>Correo</label><input type="email" formControlName="correo">@if (invalido('correo')) { <small class="error">Ingresa un correo valido.</small> }</div>
+          <div class="field"><label>Nombre de usuario</label><input formControlName="nombreUsuario">@if (invalido('nombreUsuario')) { <small class="error">Usa 3 a 30 caracteres: letras, numeros, punto, guion o guion bajo.</small> }</div>
+        </div>
+        <div class="two-cols">
+          <div class="field"><label>Contrasena</label><input type="password" formControlName="contrasena">@if (invalido('contrasena')) { <small class="error">Minimo 8 caracteres, una mayuscula y un numero.</small> }</div>
+          <div class="field"><label>Repetir contrasena</label><input type="password" formControlName="repetirContrasena">@if (invalido('repetirContrasena')) { <small class="error">Repite la contrasena.</small> }</div>
+        </div>
+        @if (formulario.hasError('contrasenasNoCoinciden') && formulario.controls.repetirContrasena.touched) {
+          <p class="error">Las contrasenas no coinciden.</p>
+        }
+        <div class="field"><label>Fecha de nacimiento</label><input type="date" formControlName="fechaNacimiento">@if (invalido('fechaNacimiento')) { <small class="error">Ingresa una fecha valida que no sea futura.</small> }</div>
+        <div class="field"><label>Descripcion</label><textarea maxlength="280" formControlName="descripcion"></textarea>@if (invalido('descripcion')) { <small class="error">Ingresa una descripcion de 3 a 280 caracteres.</small> }</div>
+        <fieldset class="role-field">
+          <legend>Perfil</legend>
+          <label><input type="radio" formControlName="perfil" value="usuario"> Usuario</label>
+          <label><input type="radio" formControlName="perfil" value="administrador"> Administrador</label>
+        </fieldset>
+        <div class="field"><label for="admin-foto">Foto de perfil</label><input id="admin-foto" type="file" accept="image/*" (change)="seleccionarImagen($event)"></div>
+        <button class="btn btn-primary" type="submit" [disabled]="guardando()">{{ guardando() ? 'Creando...' : 'Crear usuario' }}</button>
+      </form>
+    </section>
+  </div>
+</section>

@@ -36,6 +36,9 @@ export class Usuario {
   @Prop({ type: String, enum: ['usuario', 'administrador'], default: 'usuario', index: true })
   perfil!: PerfilUsuario;
 
+  @Prop({ default: true, index: true })
+  activo!: boolean;
+
   createdAt!: Date;
   updatedAt!: Date;
 }

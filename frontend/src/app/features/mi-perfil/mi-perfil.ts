@@ -8,11 +8,24 @@ import { ModalService } from '../../core/services/modal.service';
 import { PublicacionesService } from '../../core/services/publicaciones.service';
 import { SessionService } from '../../core/services/session.service';
 import { UsuariosService } from '../../core/services/usuarios.service';
+import { AdminAccentDirective } from '../../shared/directives/admin-accent.directive';
+import { NavegableDirective } from '../../shared/directives/navegable.directive';
+import { NombreCompletoPipe } from '../../shared/pipes/nombre-completo.pipe';
+import { PerfilEtiquetaPipe } from '../../shared/pipes/perfil-etiqueta.pipe';
+import { TextoCortoPipe } from '../../shared/pipes/texto-corto.pipe';
 
 @Component({
   selector: 'app-mi-perfil',
   standalone: true,
-  imports: [DatePipe, RouterLink],
+  imports: [
+    DatePipe,
+    RouterLink,
+    NavegableDirective,
+    AdminAccentDirective,
+    NombreCompletoPipe,
+    PerfilEtiquetaPipe,
+    TextoCortoPipe,
+  ],
   templateUrl: './mi-perfil.html',
   styleUrl: './mi-perfil.css',
 })

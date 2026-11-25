@@ -1,11 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { SessionService } from '../../../core/services/session.service';
+import { AdminAccentDirective } from '../../directives/admin-accent.directive';
+import { PerfilEtiquetaPipe } from '../../pipes/perfil-etiqueta.pipe';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, PerfilEtiquetaPipe, AdminAccentDirective],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

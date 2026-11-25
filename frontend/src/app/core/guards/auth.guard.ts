@@ -6,13 +6,13 @@ export const authGuard: CanActivateFn = (_route, state) => {
   const session = inject(SessionService);
   const router = inject(Router);
 
-  if (session.autenticado()) return true;
-
-  if (session.token()) {
+  // En cada inicio/recarga de la SPA se pasa una vez por la pantalla de carga.
+  if (!session.arranqueVerificado()) {
     return router.createUrlTree(['/cargando'], {
       queryParams: { returnUrl: state.url },
     });
   }
 
+  if (session.autenticado()) return true;
   return router.createUrlTree(['/login']);
 };

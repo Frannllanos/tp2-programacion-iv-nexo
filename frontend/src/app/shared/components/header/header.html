@@ -6,16 +6,20 @@
     </a>
 
     @if (session.usuario(); as usuario) {
-      <nav class="links" aria-label="Navegación principal">
+      <nav class="links" aria-label="Navegacion principal">
         <a routerLink="/publicaciones" routerLinkActive="active">Publicaciones</a>
         <a routerLink="/mi-perfil" routerLinkActive="active">Mi perfil</a>
+        @if (session.esAdmin()) {
+          <a routerLink="/dashboard/usuarios" routerLinkActive="active">Usuarios</a>
+          <a routerLink="/dashboard/estadisticas" routerLinkActive="active">Estadisticas</a>
+        }
       </nav>
 
       <div class="account">
         <img class="avatar" [src]="usuario.fotoPerfilUrl" [alt]="'Foto de ' + usuario.nombreUsuario">
         <div class="account-copy">
           <strong>@{{ usuario.nombreUsuario }}</strong>
-          <span>{{ usuario.perfil }}</span>
+          <span [appAdminAccent]="usuario.perfil">{{ usuario.perfil | perfilEtiqueta }}</span>
         </div>
         <button class="logout" type="button" (click)="cerrarSesion()">Salir</button>
       </div>

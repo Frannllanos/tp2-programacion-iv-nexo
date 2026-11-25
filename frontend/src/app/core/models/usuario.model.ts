@@ -10,6 +10,7 @@ export interface Usuario {
   descripcion: string;
   fotoPerfilUrl: string;
   perfil: PerfilUsuario;
+  activo: boolean;
   createdAt: string;
   updatedAt: string;
 }

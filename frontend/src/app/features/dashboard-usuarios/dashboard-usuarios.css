@@ -1,0 +1,20 @@
+.dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(340px, .65fr); gap: 24px; align-items: start; }
+.panel { padding: 24px; }
+.panel h1, .panel h2 { margin: 7px 0; }
+.muted { color: var(--muted); line-height: 1.5; }
+.eyebrow { color: var(--accent); font-weight: 900; letter-spacing: .12em; font-size: .75rem; }
+.user-list { display: grid; gap: 10px; margin-top: 20px; }
+.user-row { display: grid; grid-template-columns: 48px minmax(0,1fr) auto auto auto; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 15px; background: #0c1321; }
+.user-row > img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.user-copy { display: grid; min-width: 0; }
+.user-copy span { color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
+.status { color: #6ee7b7; font-size: .78rem; font-weight: 800; }
+.status.off { color: #fda4af; }
+.disabled-user { opacity: .68; }
+.create-panel form { display: grid; gap: 13px; margin-top: 18px; }
+.two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.role-field { border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; gap: 18px; }
+.role-field legend { color: #dbe4f0; font-weight: 700; padding: 0 6px; }
+.role-field label { display: flex; align-items: center; gap: 7px; color: var(--muted); }
+@media (max-width: 1000px) { .dashboard-grid { grid-template-columns: 1fr; }.user-row { grid-template-columns: 48px 1fr auto; }.user-row .status { grid-column: 2; }.user-row button { grid-column: 3; grid-row: 1 / span 2; } }
+@media (max-width: 620px) { .two-cols { grid-template-columns: 1fr; }.user-row { grid-template-columns: 42px 1fr; }.user-row > .badge, .user-row > .status, .user-row > button { grid-column: 2; }.user-row > button { grid-row: auto; justify-self: start; } }

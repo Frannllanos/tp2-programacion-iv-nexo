@@ -1,0 +1,86 @@
+<section class="page">
+  <div class="container stats-page">
+    <header class="stats-header">
+      <div>
+        <span class="eyebrow">DASHBOARD ADMIN</span>
+        <h1>Estadisticas</h1>
+        <p>Elegí un periodo y compara la actividad de la red social.</p>
+      </div>
+      <div class="filters card">
+        <label>Desde <input type="date" [value]="desde()" (change)="actualizarDesde($event)"></label>
+        <label>Hasta <input type="date" [value]="hasta()" (change)="actualizarHasta($event)"></label>
+        <button class="btn btn-primary" type="button" [disabled]="cargando()" (click)="cargar()">{{ cargando() ? 'Actualizando...' : 'Actualizar' }}</button>
+      </div>
+    </header>
+
+    <section class="card chart-card">
+      <div class="chart-title">
+        <div><span class="chart-type">BARRAS</span><h2>Publicaciones por usuario</h2></div>
+        <p>{{ desde() }} → {{ hasta() }}</p>
+      </div>
+      @if (publicacionesUsuario().length === 0) {
+        <div class="empty">No hay publicaciones en el periodo.</div>
+      } @else {
+        <div class="bar-chart">
+          @for (punto of publicacionesUsuario(); track punto.usuarioId ?? punto.etiqueta) {
+            <div class="bar-row">
+              <span class="bar-label">@{{ punto.etiqueta }}</span>
+              <div class="bar-track"><div class="bar-value" [style.width.%]="porcentajeBarra(punto.cantidad)"></div></div>
+              <strong>{{ punto.cantidad }}</strong>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="card chart-card">
+      <div class="chart-title">
+        <div><span class="chart-type">LINEAS</span><h2>Comentarios realizados por dia</h2></div>
+        <p>{{ desde() }} → {{ hasta() }}</p>
+      </div>
+      @if (comentariosDia().length === 0) {
+        <div class="empty">No hay comentarios en el periodo.</div>
+      } @else {
+        <div class="line-wrap">
+          <svg viewBox="0 0 400 200" role="img" aria-label="Comentarios por dia">
+            <line x1="20" y1="180" x2="380" y2="180" class="axis"></line>
+            <polyline [attr.points]="linePoints()" class="line"></polyline>
+            @for (punto of comentariosDia(); track punto.fecha; let i = $index) {
+              <circle
+                [attr.cx]="comentariosDia().length === 1 ? 200 : 20 + (i / (comentariosDia().length - 1)) * 360"
+                [attr.cy]="180 - (punto.cantidad / maxComentariosDia()) * 140"
+                r="5" class="dot">
+              </circle>
+            }
+          </svg>
+          <div class="line-labels">
+            @for (punto of comentariosDia(); track punto.fecha) {
+              <span>{{ punto.fecha }}<b>{{ punto.cantidad }}</b></span>
+            }
+          </div>
+        </div>
+      }
+    </section>
+
+    <section class="card chart-card donut-layout">
+      <div>
+        <div class="chart-title">
+          <div><span class="chart-type">TORTA</span><h2>Comentarios por publicacion</h2></div>
+          <p>Total: {{ totalComentariosPublicacion() }}</p>
+        </div>
+        @if (comentariosPublicacion().length === 0) {
+          <div class="empty">No hay comentarios en publicaciones para este periodo.</div>
+        } @else {
+          <div class="legend">
+            @for (punto of comentariosPublicacion(); track punto.publicacionId; let i = $index) {
+              <div><i [style.background]="colorLeyenda(i)"></i><span>{{ punto.etiqueta }}</span><strong>{{ punto.cantidad }} ({{ porcentajeDonut(punto.cantidad) }}%)</strong></div>
+            }
+          </div>
+        }
+      </div>
+      @if (comentariosPublicacion().length > 0) {
+        <div class="donut" [style.background]="donutGradient()"><span>{{ totalComentariosPublicacion() }}</span></div>
+      }
+    </section>
+  </div>
+</section>

@@ -7,31 +7,27 @@ Repositorio único con los dos proyectos exigidos por el TP:
 
 ## Alcance de esta entrega
 
-Este repositorio implementa **Sprint 1 y Sprint 2 únicamente**. No se implementan JWT, cookies, refresh token, comentarios editables, dashboard, PWA, pipes/directivas propias ni requerimientos de Sprint 3/4/5/6.
+Este repositorio contiene la implementacion acumulada de los **Sprint 1, 2, 3 y 4** del TP.
 
-### Sprint 1
+### Sprint 1-2
 
-- Angular con pantallas Registro, Login, Publicaciones y Mi Perfil.
-- Navegación, diseño responsive y favicon propio.
-- Formularios reactivos con validaciones y mensajes.
-- NestJS con módulos `autenticacion`, `usuarios` y `publicaciones`.
-- Registro con contraseña hasheada y foto de perfil.
-- Login por correo o nombre de usuario.
-- MongoDB/Mongoose preparado.
-- Cloudinary + Multer + Sharp preparados para archivos.
-- Códigos HTTP coherentes.
+- Registro, login, publicaciones, Mi Perfil, imagenes, likes, paginacion y baja logica.
 
-### Sprint 2
+### Sprint 3
 
-- Alta de publicaciones con título, descripción e imagen opcional.
-- Listado ordenado por fecha o cantidad de likes.
-- Paginación con `offset` y `limit`.
-- Publicación como componente Angular independiente.
-- Dar/quitar Me Gusta con máximo un like por usuario.
-- Baja lógica de publicaciones.
-- Eliminación autorizada para autor o administrador en backend.
-- Mi Perfil con todos los datos y últimas 3 publicaciones.
-- Estructura de comentarios visible en Mi Perfil, sin implementar todavía el controller de comentarios (corresponde a Sprint 3).
+- Autenticacion JWT, autorizar/refrescar, guards e interceptor 401.
+- Vista individual de publicacion con comentarios paginados y editables.
+- Pantalla de validacion de sesion.
+
+### Sprint 4
+
+- Administracion de usuarios con alta/baja logica y roles.
+- Administradores pueden dar de baja cualquier publicacion.
+- Dashboard de estadisticas con rango de fechas y tres tipos de graficos.
+- PWA, 3 pipes propias y 3 directivas propias.
+- JWT ajustado a 3 minutos y aviso 1 minuto antes segun la correccion final del profesor.
+
+Ver [`SPRINT4-CHECKLIST.md`](./SPRINT4-CHECKLIST.md) para el detalle.
 
 ## Requisitos
 
@@ -89,11 +85,9 @@ Direcciones locales por defecto:
 - NestJS: `http://localhost:3000/api`
 - Health: `http://localhost:3000/api/health`
 
-## Nota importante sobre autenticación en Sprint 1-2
+## Autenticacion actual
 
-El TP recién exige JWT en Sprint 3. Sprint 1 pide navegación sin límites de accesibilidad. Para poder demostrar acciones asociadas a un usuario en Sprint 2, el frontend conserva temporalmente el **objeto de usuario devuelto por el login** en `localStorage`.
-
-Esto **NO es autenticación segura de backend** y está señalado en el código como deuda intencional de Sprint 3. En Sprint 3 se reemplaza por JWT/cookie, guard de NestJS y autorización basada en token.
+La aplicacion usa JWT. En el navegador se conserva una unica entrada `nexo_sesion`, que contiene el objeto `usuario` y el `token`. Al iniciar o recargar la aplicacion se muestra una vez la pantalla de carga mientras se determina o valida la sesion. Las rutas sensibles del backend validan el token y las rutas administrativas validan ademas el rol `administrador`.
 
 ## Imágenes
 

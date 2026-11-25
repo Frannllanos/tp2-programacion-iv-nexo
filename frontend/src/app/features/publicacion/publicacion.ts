@@ -175,7 +175,7 @@ export class PublicacionDetalle implements OnInit {
   puedeEliminar(): boolean {
     const publicacion = this.publicacion();
     const usuario = this.session.usuario();
-    return Boolean(publicacion && usuario && publicacion.autor.id === usuario.id);
+    return Boolean(publicacion && usuario && (publicacion.autor.id === usuario.id || usuario.perfil === 'administrador'));
   }
 
   private cargarPublicacion(): void {
